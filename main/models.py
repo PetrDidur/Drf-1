@@ -10,10 +10,6 @@ class Course(models.Model):
     description = models.TextField(verbose_name='описание курса')
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
-
-
-
-
     class Meta:
         verbose_name = 'курс'
         verbose_name_plural = 'курсы'
