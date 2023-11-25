@@ -7,11 +7,12 @@ from main.validators import VideoLinkValidator
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    validators = [VideoLinkValidator(field='video_link')]
 
     class Meta:
         model = Lesson
         fields = '__all__'
+        extra_kwargs = {'video_link': {'required': False}}
+        validators = [VideoLinkValidator(field='video_link')]
 
 
 class CourseSerializer(serializers.ModelSerializer):
