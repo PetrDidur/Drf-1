@@ -7,7 +7,7 @@ from users.models import NULLABLE, User
 class Course(models.Model):
     name = models.CharField(max_length=150, verbose_name='название курса')
     preview = models.ImageField(upload_to='preview/', verbose_name='превью курса', **NULLABLE)
-    description = models.TextField(verbose_name='описание курса')
+    description = models.TextField(verbose_name='описание курса', **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
 
     class Meta:
@@ -60,6 +60,20 @@ class Payment(models.Model):
     class Meta:
         verbose_name = 'Платеж'
         verbose_name_plural = 'Платежи'
+
+
+class Subscription(models.Model):
+    is_active = models.BooleanField(default=True, verbose_name='активна')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, verbose_name='курс', **NULLABLE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
+
+    def __str__(self):
+        return f'{self.user}: {self.course} {self.is_active}'
+
+    class Meta:
+        verbose_name = 'подписка'
+        verbose_name_plural = 'подписки'
+        unique_together = ('user', 'course')
 
 
 
