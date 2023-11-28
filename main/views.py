@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
-from main.models import Course, Lesson, Payment
+from main.models import Course, Lesson, Payment, Subscription
 from main.paginators import CoursePaginator
 from main.permissions import IsModerator, IsOwner
 from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
@@ -60,12 +61,12 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 class LessonUpdateAPIView(generics.UpdateAPIView):
     serializer_class = LessonSerializer
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner | IsModerator]
+    #permission_classes = [IsAuthenticated, IsOwner | IsModerator]
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner]
+    #permission_classes = [IsAuthenticated, IsOwner]
 
 
 class PaymentListAPIView(generics.ListAPIView):
@@ -78,12 +79,21 @@ class PaymentListAPIView(generics.ListAPIView):
 
 
 class SubscriptionCreateAPIView(generics.CreateAPIView):
+    queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
-    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer, *args, **kwargs):
+        new_subscription = serializer.save()
+        new_subscription.user = self.request.user
+        pk = self.kwargs.get('pk')
+        new_subscription.course = Course.objects.get(pk=pk)
+        new_subscription.save()
 
 
 class SubscriptionDestroyAPIView(generics.DestroyAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Subscription.objects.all()
+    serializer_class = SubscriptionSerializer
+    permission_classes = [IsAuthenticated]
 
 
 
