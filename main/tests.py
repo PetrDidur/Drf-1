@@ -33,6 +33,7 @@ class LessonTestCase(APITestCase):
             name='test_lesson',
         )
 
+
     def test_get_list(self):
         """Test for getting list of lessons"""
 
@@ -70,7 +71,8 @@ class LessonTestCase(APITestCase):
         """Test lesson creating"""
 
         data = {
-                        "name": "test",
+            "name": "test",
+            "course": "IT",
                     }
 
         response = self.client.post(

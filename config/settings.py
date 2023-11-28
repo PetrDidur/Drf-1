@@ -85,6 +85,9 @@ DATABASES = {
         'USER': 'postgres',
         'PORT': '5433',
         'PASSWORD': '9184',
+        'TEST': {
+            'NAME': 'test_djangoproject6'
+        }
     }
 }
 

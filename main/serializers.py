@@ -14,6 +14,7 @@ class LessonSerializer(serializers.ModelSerializer):
         fields = '__all__'
         validators = [VideoLinkValidator(field='video_link')]
 
+
 class SubscriptionSerializer(serializers.ModelSerializer):
 
     class Meta:
