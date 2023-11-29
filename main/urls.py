@@ -20,7 +20,7 @@ urlpatterns = [
     path('lesson/delete/<int:pk>/', LessonDestroyAPIView.as_view(), name='lesson-delete'),
 
     path('payment/', PaymentListAPIView.as_view(), name='payment_list'),
-    path('subscription/create/', SubscriptionCreateAPIView.as_view(), name='subscription-create'),
-    path('subscription/delete/<int:pk>/', SubscriptionDestroyAPIView.as_view(), name='subscription-delete'),
+    path('course/<int:pk>/create_sub/', SubscriptionCreateAPIView.as_view(), name='subscription-create'),
+    path('course/<int:pk>/delete_sub/', SubscriptionDestroyAPIView.as_view(), name='subscription-delete'),
 
 ] + router.urls
