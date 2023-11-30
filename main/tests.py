@@ -35,7 +35,6 @@ class LessonTestCase(APITestCase):
             course=self.course
         )
 
-
     def test_get_list(self):
         """Test for getting list of lessons"""
 
@@ -57,7 +56,7 @@ class LessonTestCase(APITestCase):
                 "results": [
                     {
                         "id": self.lesson.id,
-                        "course": self.lesson.course_id,
+                        "course": "test_course",
                         "name": self.lesson.name,
                         "description": self.lesson.description,
                         "preview": None,

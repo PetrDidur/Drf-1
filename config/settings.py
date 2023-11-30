@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'main',
     'django_filters',
     'rest_framework_simplejwt',
+    'coverage',
 ]
 
 MIDDLEWARE = [
@@ -144,5 +145,4 @@ REST_FRAMEWORK = {
     ]
 }
 # simple jwt finish
-ACCESS_TOKEN_EXPIRE_SECONDS = 3600
 
