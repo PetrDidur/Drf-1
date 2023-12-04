@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_simplejwt',
     'coverage',
+    'drf_yasg',
+    'stripe',
 ]
 
 MIDDLEWARE = [
@@ -86,9 +88,6 @@ DATABASES = {
         'USER': 'postgres',
         'PORT': '5433',
         'PASSWORD': '9184',
-        'TEST': {
-            'NAME': 'test_djangoproject6'
-        }
     }
 }
 
@@ -145,4 +144,7 @@ REST_FRAMEWORK = {
     ]
 }
 # simple jwt finish
+
+STRIPE_PUBLIC_KEY = 'pk_test_51OIZJxHwamxluJQpHD2SBrQyU12VfDLZ2vn7pyAfQe3YWXYzhnzmoCD6fBv3X9Mh9BJ0Pb4EaasNBQlOa3oMoAat00MzycrhhP'
+STRIPE_SECRET_KEY = 'sk_test_51OIZJxHwamxluJQpetSHrgEQMzozWYy5qvT04DRZboPbqDADgz8s867L9Bkl9ofnkDBQoZT9C0NyKG6tIZr4sNx600MK9ucGWn'
 

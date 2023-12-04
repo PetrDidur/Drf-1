@@ -10,6 +10,7 @@ class Course(models.Model):
     preview = models.ImageField(upload_to='preview/', verbose_name='превью курса', **NULLABLE)
     description = models.TextField(verbose_name='описание курса', **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
+    price = models.CharField(verbose_name='price', **NULLABLE, default=1000)
 
     class Meta:
         verbose_name = 'курс'
@@ -26,6 +27,7 @@ class Lesson(models.Model):
     video_link = models.URLField(verbose_name='ссылка на видео', **NULLABLE)
     course = models.ForeignKey(Course, verbose_name='курс', related_name='lessons', on_delete=models.CASCADE, **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, **NULLABLE)
+    amount = models.CharField(verbose_name='amount', **NULLABLE)
 
     class Meta:
         verbose_name = 'урок'
@@ -37,7 +39,7 @@ class Lesson(models.Model):
 
 class Payment(models.Model):
     user = models.ForeignKey(User, verbose_name='пользователь', on_delete=models.CASCADE,
-                             **NULLABLE, related_name='payments')
+                             **NULLABLE, related_name='payment')
     payment_date = models.DateField(verbose_name='дата оплаты', auto_now_add=True)
 
     COURSE_OR_LESSON_CHOICES = [
@@ -54,6 +56,7 @@ class Payment(models.Model):
     ]
 
     payment_method = models.CharField(max_length=10, choices=PAYMENT_METHOD_CHOICES)
+    stripe_id = models.CharField(max_length=300, verbose_name='stripe_id', **NULLABLE)
 
     def __str__(self):
         return f"{self.user} - {self.payment_sum} - {self.payment_date}"

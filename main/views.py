@@ -1,10 +1,13 @@
 from django.shortcuts import render
+from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, generics, status
+from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from config.settings import STRIPE_SECRET_KEY
 from main.models import Course, Lesson, Payment, Subscription
 from main.paginators import CoursePaginator
 from main.permissions import IsModerator, IsOwner
@@ -88,7 +91,7 @@ class SubscriptionCreateAPIView(generics.CreateAPIView):
         subscription = serializer.save()  # получаю подписку
         subscription.user = self.request.user  # сохраняю в базе юзера
         course_pk = self.kwargs.get('pk')  # сохраняю pk
-        subscription.course = Course.objects.get(pk=course_pk)
+        subscription.course = Course.objects.get(pk=course_pk)  # достаю нужную подписку
         subscription.save()
 
 
@@ -96,6 +99,41 @@ class SubscriptionDestroyAPIView(generics.DestroyAPIView):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = [IsAuthenticated]
+
+
+class CoursePaymentAPIView(generics.RetrieveAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    def get(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, context={'request': request})
+        payment_link = serializer.data['payment_link']
+        return Response({'payment_link': payment_link})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
