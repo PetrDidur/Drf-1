@@ -8,10 +8,10 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 def create_and_save_link_to_pay(obj):
 
-    product = stripe.Product.create(id=obj.pk)
+    product = stripe.Product.create(name=obj.name)
 
     price = stripe.Price.create(
-        unit_amount=obj.amount,
+        unit_amount=obj.price,
         currency="usd",
         recurring={"interval": "month"},
         product=product.id,
