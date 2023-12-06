@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'coverage',
     'drf_yasg',
     'stripe',
+    'celery',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -145,6 +147,47 @@ REST_FRAMEWORK = {
 }
 # simple jwt finish
 
+#  keys for stripe
 STRIPE_PUBLIC_KEY = 'pk_test_51OIZJxHwamxluJQpHD2SBrQyU12VfDLZ2vn7pyAfQe3YWXYzhnzmoCD6fBv3X9Mh9BJ0Pb4EaasNBQlOa3oMoAat00MzycrhhP'
 STRIPE_SECRET_KEY = 'sk_test_51OIZJxHwamxluJQpetSHrgEQMzozWYy5qvT04DRZboPbqDADgz8s867L9Bkl9ofnkDBQoZT9C0NyKG6tIZr4sNx600MK9ucGWn'
+#  keys for stripe finish
+
+# settings.py
+
+# Настройки для Celery
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = 'redis://localhost:6379'  # Например, Redis, который по умолчанию работает на порту 6379
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = "Australia/Tasmania"
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+# settings.py
+
+# Настройки для Celery
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'users.tasks.block_inactive_users',  # Путь к задаче
+        'schedule': timedelta(minutes=1),  # Расписание выполнения задачи (например, каждые 10 минут)
+    },
+}
+
+#  Настройки рассылки
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'fuckup@oscarbot.ru'
+EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
+EMAIL_USE_SSL = True
+
+
+
 

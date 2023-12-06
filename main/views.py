@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,6 +15,8 @@ from main.permissions import IsModerator, IsOwner
 from main.serializers import CourseSerializer, LessonSerializer, PaymentSerializer, SubscriptionSerializer
 
 from rest_framework.filters import OrderingFilter
+
+from main.tasks import send_emails
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -37,6 +40,20 @@ class CourseViewSet(viewsets.ModelViewSet):
         new_course = serializer.save()
         new_course.owner = self.request.user
         new_course.save()
+
+    def perform_update(self, serializer):
+        serializer.save()
+        pk = self.kwargs.get('pk')
+        course = Course.objects.get(pk=pk)
+        subscriptions = Subscription.objects.filter(course=course, is_active=True)
+        subject = 'Course update'
+        message = 'Course update'
+        from_email = settings.EMAIL_HOST_USER
+
+        emails = list(subscriptions.values_list('user__email', flat=True))
+
+        send_emails.delay(emails, subject, message, from_email)
+        return Response('Message sent')
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
